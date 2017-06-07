@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertTrue;
+
 public class task7 {
     private WebDriver driver;
     private WebDriverWait wait;
@@ -37,17 +39,27 @@ public class task7 {
         for (int i = 1; i <= level1.size() ; i++) {
             WebElement element1 = driver.findElement(By.cssSelector("#box-apps-menu > li:nth-child(" + i + ')'));
             element1.click();
-            driver.findElement(By.tagName("h1"));
+            assertTrue(isHeader(driver));
 
             level2 = (ArrayList<WebElement>) driver.findElements(By.cssSelector(".docs li"));
             for (int j = 2; j <= level2.size(); j++) {
                 WebElement element2 = driver.findElement(By.cssSelector(".docs li:nth-child(" + j + ')'));
                 element2.click();
-                driver.findElement(By.tagName("h1"));
+                assertTrue(isHeader(driver));
             }
         }
     }
-    
+
+    boolean isHeader(WebDriver driver){
+        try {
+            driver.findElement(By.tagName("h1"));
+            return true;
+        }
+        catch (org.openqa.selenium.NoSuchElementException ex){
+            return false;
+        }
+    }
+
     @After
     public void stop(){
         driver.quit();
