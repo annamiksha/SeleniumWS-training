@@ -28,14 +28,50 @@ public class task9 {
     public void checkCountriesSorting() {
         List<WebElement> tableData = new ArrayList<>();
         ArrayList<String> countries = new ArrayList<String>();
+        int columns = 7;
+        int countryColumn = 5;
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         AdminPanelLogin();
         openAdminBlock(driver,3).click();
         WebElement countryTable = driver.findElement(By.className("data-table"));
         tableData = countryTable.findElements(By.tagName("td"));
-        countries = getColumnData(tableData,7,5);
+        countries = getColumnData(tableData,columns,countryColumn,"textContent");
         assertTrue(isListOrdered(countries));
+
+    }
+
+    @Test
+    public void checkCountryZones() {
+        List<WebElement> tableData = new ArrayList<>();
+        List<WebElement> zoneTableData = new ArrayList<>();
+        ArrayList<String> zonesCount = new ArrayList<String>();
+        ArrayList<String> zones = new ArrayList<String>();
+        int columns = 7;
+        int zonesColumns = 2; //count only .form-control
+        int zoneNameColumn = 2; //count only .form-control
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        AdminPanelLogin();
+        openAdminBlock(driver,3).click();
+        WebElement countryTable = driver.findElement(By.className("data-table"));
+        tableData = countryTable.findElements(By.tagName("td"));
+        zonesCount = getColumnData(tableData,columns,columns - 1,"textContent");
+
+        for (int i = 0; i < zonesCount.size(); i++) {
+            if (zonesCount.get(i).compareTo("0") > 0){
+                tableData.get(columns * (i + 1) - 1).click();
+                WebElement zoneTable = driver.findElement(By.className("data-table"));
+                zoneTableData = zoneTable.findElements(By.cssSelector("td .form-control"));
+                zones = getColumnData(zoneTableData,zonesColumns,zoneNameColumn,"defaultValue");
+                assertTrue(isListOrdered(zones));
+
+                //Return to countries
+                openAdminBlock(driver,3).click();
+                countryTable = driver.findElement(By.className("data-table"));
+                tableData = countryTable.findElements(By.tagName("td"));
+            }
+        }
 
     }
 
@@ -44,6 +80,8 @@ public class task9 {
         List<WebElement> tableData = new ArrayList<>();
         List<WebElement> zoneData = new ArrayList<>();
         ArrayList<String> countries = new ArrayList<String>();
+        int columns = 4;
+        int zoneColumn = 3;
         driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 
         AdminPanelLogin();
@@ -51,15 +89,15 @@ public class task9 {
         WebElement countryTable = driver.findElement(By.className("data-table"));
         tableData = countryTable.findElements(By.tagName("td"));
 
-        for (int i = 4; i < tableData.size(); i = i + 5) {
-            tableData.get(i).click();
+        for (int i = columns; i < tableData.size(); i = i + columns + 1) {
+            tableData.get(i).click(); //click the pencil icon
 
             WebElement zoneTable = driver.findElement(By.className("data-table"));
             zoneData = zoneTable.findElements(By.tagName("td"));
-            countries = getColumnData(zoneData,4,3);
+            countries = getColumnData(zoneData,columns,zoneColumn,"textContent");
             assertTrue(isListOrdered(countries));
 
-            //Возврат к списку зон
+            //Return to zones
             openAdminBlock(driver,6).click();
             countryTable = driver.findElement(By.className("data-table"));
             tableData = countryTable.findElements(By.tagName("td"));
@@ -74,10 +112,10 @@ public class task9 {
         driver.findElement(By.className("btn")).click();
     }
 
-    ArrayList<String> getColumnData(List<WebElement> data, int columnsCount, int column){
+    ArrayList<String> getColumnData(List<WebElement> data, int columnsCount, int column, String attribute){
         ArrayList<String> list = new ArrayList<String>();
         for (int i = column - 1; i < data.size() ; i = i + columnsCount) {
-            list.add(data.get(i).getAttribute("textContent"));
+            list.add(data.get(i).getAttribute(attribute));
         }
         return list;
     }
