@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+
 public class task11 {
     private WebDriver driver;
     private WebDriverWait wait;
@@ -17,7 +19,7 @@ public class task11 {
     @Before
     public void start(){
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, 1);
+        wait = new WebDriverWait(driver, 3);
     }
 
     @Test
@@ -36,10 +38,11 @@ public class task11 {
         String pass = "Qwerty1";
         String passConfirm = "Qwerty1";
 
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.get("http://localhost/litecart/en/");
-        driver.findElement(By.cssSelector("div#box-account-login p")).click();
-        WebElement account = driver.findElement(By.cssSelector("div#box-create-account"));
+        driver.findElement(By.cssSelector("div#box-account-login a")).click();
+
+        WebElement account = driver.findElement(By.cssSelector("div#create-account"));
 
         setUserData(account,"tax_id",tax);
         setUserData(account,"company",company);
@@ -53,10 +56,7 @@ public class task11 {
         setUserData(account,"phone",phone);
         setUserData(account,"password",pass);
         setUserData(account,"confirmed_password",passConfirm);
-        account.findElement(By.cssSelector("[name = country_code]")).click();
-        account.findElement(By.cssSelector("[name = country_code] [value = US]")).click();
-        account.findElement(By.cssSelector("[name = zone_code]")).click();
-        account.findElement(By.cssSelector("[name = country_code] [value = AL]")).click();
+        account.findElement(By.name("country_code")).sendKeys("United States");
 
         account.findElement(By.cssSelector("[name = create_account]")).click();
         logout(driver);
