@@ -40,12 +40,12 @@ public class task12 {
         openAdminBlock(2);
         int productsBefore = countRootItems();
 
-        driver.findElement(By.cssSelector(".pull-right li:last-child")).click();
-        WebElement tab = driver.findElement(By.cssSelector(".tab-content"));
+        driver.findElements(By.className("button")).get(1).click();
+        WebElement tab = driver.findElement(By.cssSelector("#tab-general"));
 
 
         //General
-        tab.findElement(By.cssSelector("[data-toggle = buttons] .btn-default")).click();
+        tab.findElement(By.name("status")).click();
         tab.findElement(By.cssSelector("[data-name = Subcategory]")).click();
         tab.findElement(By.cssSelector("[data-name = Subcategory]")).click();
         tab.findElement(By.name("product_groups[]")).click();
@@ -53,37 +53,13 @@ public class task12 {
         setData(tab,"date_valid_to", "21052020");
         setData(tab,"code","product_code" + rn);
         tab.findElement(By.name("name[en]")).sendKeys("New Product");
-        setData(tab,"sku","sku1" + rn);
-        setData(tab,"gtin","gtin1"+ rn);
-        setData(tab,"taric","taric1" + rn);
+
 
         WebElement quantity = tab.findElement(By.name("quantity"));
         quantity.click();
         for (int i = 0; i < 3; i++) {
             quantity.sendKeys(Keys.ARROW_UP);
         }
-
-        WebElement weight = tab.findElement(By.name("weight"));
-        weight.click();
-        for (int i = 0; i < 2; i++) {
-            weight.sendKeys(Keys.ARROW_UP);
-        }
-
-        tab.findElement(By.name("weight_class")).click();
-        tab.findElement(By.cssSelector("[title = Pounds]")).click();
-
-        WebElement dim = tab.findElement(By.name("dim_x" ));
-        dim.clear();
-        dim.sendKeys("1");
-        dim = tab.findElement(By.name("dim_y" ));
-        dim.clear();
-        dim.sendKeys("2");
-        dim = tab.findElement(By.name("dim_z" ));
-        dim.clear();
-        dim.sendKeys("1");
-        dim = tab.findElement(By.name("dim_class" ));
-        dim.click();
-        dim.findElement(By.cssSelector("[value = in]")).click();
 
         tab.findElement(By.name("delivery_status_id")).click();
         WebElement status = tab.findElement(By.name("sold_out_status_id"));
@@ -94,22 +70,21 @@ public class task12 {
 
 
         //Information
-        driver.findElement(By.cssSelector(".nav-tabs li:nth-child(2)")).click();
-        tab = driver.findElement(By.cssSelector(".tab-content"));
+        driver.findElement(By.cssSelector(".index li:nth-child(2)")).click();
+        tab = driver.findElement(By.cssSelector("#tab-information"));
         tab.findElement(By.name("manufacturer_id")).click();
         tab.findElements(By.cssSelector("[name = manufacturer_id] option")).get(1).click();
         setData(tab,"keywords","test");
         tab.findElement(By.name("short_description[en]")).sendKeys("Short description is short");
         tab.findElement(By.className("trumbowyg-editor")).click();
         tab.findElement(By.className("trumbowyg-editor")).sendKeys("There was once a couple who had long in vain wished for a child. At length the woman hoped that God was about to grant her desire. They had a little window at the back of their house from which a splendid garden could be seen, which was full of beautiful flowers and herbs. It was, however, surrounded by a high wall, and no one dared to go into it because it belonged to an enchantress, who had great power and was dreaded by all the world.");
-        tab.findElement(By.name("attributes[en]")).sendKeys("attribute1, attribute2, attribute3");
         tab.findElement(By.name("head_title[en]")).sendKeys("Head Title");
         tab.findElement(By.name("meta_description[en]")).sendKeys("Meta Description");
 
 
         //Prices
-        driver.findElement(By.cssSelector(".nav-tabs li:nth-child(3)")).click();
-        tab = driver.findElement(By.cssSelector(".tab-content"));
+        driver.findElement(By.cssSelector(".index li:nth-child(4)")).click();
+        tab = driver.findElement(By.cssSelector("#tab-prices"));
 
         WebElement purchase_price = tab.findElement(By.name("purchase_price"));
         purchase_price.clear();
@@ -129,7 +104,7 @@ public class task12 {
 
         //Saving
         driver.findElement(By.name("save")).click();
-        driver.findElement(By.cssSelector(".center-block")).click();
+        driver.findElement(By.cssSelector(".logotype")).click();
         openAdminBlock(2);
         int productsAfter = countRootItems();
         assertTrue(productsBefore == productsAfter - 1);
@@ -141,7 +116,7 @@ public class task12 {
         driver.get("http://localhost/litecart/admin/login.php");
         driver.findElement(By.name("username")).sendKeys("admin");
         driver.findElement(By.name("password")).sendKeys("admin");
-        driver.findElement(By.className("btn")).click();
+        driver.findElement(By.name("login")).click();
     }
 
     void openAdminBlock(int order){
@@ -153,7 +128,7 @@ public class task12 {
     }
 
     int countRootItems(){
-        WebElement productTable = driver.findElement(By.className("data-table"));
+        WebElement productTable = driver.findElement(By.className("dataTable"));
         List<WebElement> products = new ArrayList<>();
         products = productTable.findElements(By.tagName("tr"));
         return products.size();
